@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#283889">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Visita Técnica Comercial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Layout: banda de cabecera + tarjetas por sección; en escritorio, índice lateral con avance; barra de acciones fija abajo */
+:root {
+  --bg: #EEF0F6;
+  --surface: #FFFFFF;
+  --ink: #181C33;
+  --muted: #5E6380;
+  --line: #D6D9E6;
+  --primary: #283889;
+  --primary-ink: #FFFFFF;
+  --accent: #E61425;
+  --accent-ink: #FFFFFF;
+  --danger: #C8102E;
+  --ok: #2E7A4C;
+  --warn: #B86E00;
+  --focus: #E61425;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Barlow", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --r: 6px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1020; --surface: #171A31; --ink: #E6E8F3; --muted: #9DA2C0; --line: #2A2E4D;
+    --primary: #8D9BEA; --primary-ink: #0E1230; --accent: #F0414F; --accent-ink: #FFFFFF;
+    --danger: #FF8A8F; --ok: #6CC490; --warn: #F0B257; --focus: #F0414F; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1020; --surface: #171A31; --ink: #E6E8F3; --muted: #9DA2C0; --line: #2A2E4D;
+  --primary: #8D9BEA; --primary-ink: #0E1230; --accent: #F0414F; --accent-ink: #FFFFFF;
+  --danger: #FF8A8F; --ok: #6CC490; --warn: #F0B257; --focus: #F0414F; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.45;
+  padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+}
+img { max-width: 100%; display: block; }
+[hidden] { display: none !important; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* Cabecera */
+/* Banda de marca: siempre blanca para que el logo se lea igual en tema claro u oscuro */
+.top {
+  background: #FFFFFF; color: #181C33;
+  border-bottom: 5px solid #283889;
+  box-shadow: inset 0 -2px 0 #E61425;
+  padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 12px;
+}
+.top-in { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.brand img { height: 52px; width: auto; flex: none; }
+.brand .t { border-left: 2px solid #D6D9E6; padding-left: 14px; min-width: 0; }
+.brand h1 {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  letter-spacing: .04em; font-size: 1.35rem; line-height: 1.05; margin: 0; color: #283889;
+}
+.brand p { margin: 3px 0 0; font-size: .82rem; color: #5E6380; }
+@media (max-width: 520px) {
+  .brand img { height: 40px; }
+  .brand h1 { font-size: 1.1rem; }
+  .brand p { display: none; }
+}
+.meta { display: flex; gap: 10px; align-items: center; font-size: .8rem; color: #5E6380; }
+.ref {
+  font-family: var(--font-display); font-weight: 600; letter-spacing: .06em; color: #283889;
+  border: 1px solid #C9CDE0; border-radius: 4px; padding: 3px 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Estructura */
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 20px; display: grid; gap: 20px; }
+@media (min-width: 960px) { .wrap { grid-template-columns: 220px minmax(0, 1fr); align-items: start; } }
+
+.toc { display: none; }
+@media (min-width: 960px) {
+  .toc { display: block; position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); }
+}
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a {
+  display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 8px;
+  padding: 9px 10px; border-radius: var(--r); color: var(--ink); text-decoration: none; font-size: .92rem;
+}
+.toc a:hover { background: var(--surface); }
+.toc .n { font-family: var(--font-display); font-weight: 700; color: var(--muted); }
+.toc .p { font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.toc a.done .p { color: var(--ok); font-weight: 600; }
+.toc-h { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .08em; font-size: .8rem; color: var(--muted); margin: 0 0 8px 10px; }
+
+form { display: grid; gap: 16px; min-width: 0; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 16px 20px; scroll-margin-top: 16px; }
+@media (min-width: 640px) { .card { padding: 22px 24px 24px; } }
+.card > h2 {
+  display: flex; align-items: baseline; gap: 10px; margin: 0 0 16px;
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  letter-spacing: .05em; font-size: 1.2rem; color: var(--primary); text-wrap: balance;
+}
+.card > h2 .n {
+  display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 4px;
+  background: var(--accent); color: var(--accent-ink); border-radius: 4px; font-size: 1rem;
+}
+.grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .grid.two { grid-template-columns: 1fr 1fr; } }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field.full { grid-column: 1 / -1; }
+.lbl { font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.lbl .req { color: var(--danger); }
+.hint { font-size: .8rem; color: var(--muted); margin: 0; }
+
+input[type=text], input[type=date], input[type=tel], select, textarea {
+  width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 11px 12px; font-size: 16px; min-height: 46px;
+}
+textarea { min-height: 110px; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent); }
+.field.err input, .field.err .chips { border-color: var(--danger); }
+.field .msg { color: var(--danger); font-size: .8rem; display: none; }
+.field.err .msg { display: block; }
+
+/* Chips (radio / checkbox) */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; border: 1px solid transparent; border-radius: var(--r); }
+.chip { position: relative; }
+.chip input { position: absolute; opacity: 0; inset: 0; margin: 0; pointer-events: none; }
+.chip span {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 42px; padding: 8px 14px;
+  border: 1px solid var(--line); background: var(--bg); border-radius: var(--r);
+  cursor: pointer; user-select: none; font-weight: 500; font-size: .95rem;
+  transition: background .12s, border-color .12s, color .12s;
+}
+.chip span:hover { border-color: var(--primary); }
+.chip input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+.chip input:checked + span { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+.chip input[type=checkbox] + span::before {
+  content: ""; width: 14px; height: 14px; border: 1.5px solid currentColor; border-radius: 3px; opacity: .6;
+}
+.chip input[type=checkbox]:checked + span::before {
+  opacity: 1; background: currentColor;
+  -webkit-mask: none;
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+.chip.p-hi input:checked + span { background: var(--danger); border-color: var(--danger); color: #fff; }
+.chip.p-md input:checked + span { background: var(--warn); border-color: var(--warn); color: #1B1405; }
+.chip.p-lo input:checked + span { background: var(--ok); border-color: var(--ok); color: #fff; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.p-hi .dot { background: var(--danger); } .p-md .dot { background: var(--warn); } .p-lo .dot { background: var(--ok); }
+.chip input:checked + span .dot { background: currentColor; }
+
+/* Fotos */
+.photo-btns { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 10px 16px; border-radius: var(--r); border: 1px solid var(--line);
+  background: var(--surface); cursor: pointer; font-weight: 600; font-size: .95rem; text-decoration: none;
+}
+.btn svg { width: 20px; height: 20px; flex: none; }
+.btn:hover { border-color: var(--primary); }
+.btn.dashed { border-style: dashed; border-width: 1.5px; background: var(--bg); color: var(--primary); }
+.btn.primary { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+.btn.accent { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.ghost { background: transparent; }
+.btn:disabled { opacity: .6; cursor: progress; }
+.thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 14px; }
+.thumb { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: var(--bg); display: grid; }
+.thumb .img { position: relative; aspect-ratio: 4 / 3; max-width: 100%; background: #0000000d; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb .no { position: absolute; left: 6px; top: 6px; background: #283889; color: #fff; font-family: var(--font-display); font-weight: 700; font-size: .8rem; padding: 1px 7px; border-radius: 3px; }
+.thumb .rm { position: absolute; right: 6px; top: 6px; width: 32px; height: 32px; border-radius: 50%; border: 0; background: rgba(0,0,0,.6); color: #fff; cursor: pointer; font-size: 18px; line-height: 1; }
+.thumb input { border: 0; border-top: 1px solid var(--line); border-radius: 0; min-height: 40px; font-size: 14px; background: var(--surface); }
+.processing { font-size: .85rem; color: var(--muted); margin-top: 10px; }
+
+/* Barra inferior */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  background: var(--surface); border-top: 1px solid var(--line);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -6px 20px rgba(10, 30, 36, .08);
+}
+.bar-in { max-width: 1120px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+.bar .grow { flex: 1; }
+.bar .status { font-size: .82rem; color: var(--muted); display: none; }
+@media (min-width: 640px) { .bar .status { display: block; } }
+.bar .btn.primary { min-width: 0; flex: 1; }
+@media (min-width: 640px) { .bar .btn.primary { flex: 0 0 auto; padding-inline: 28px; } }
+
+/* Hoja modal */
+.modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: end center; background: rgba(6, 18, 22, .55); padding: 16px; }
+@media (min-width: 640px) { .modal { place-items: center; } }
+.sheet { background: var(--surface); color: var(--ink); width: 100%; max-width: 440px; border-radius: 10px; padding: 22px 20px calc(20px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 12px; }
+.sheet h3 { margin: 0; font-family: var(--font-display); text-transform: uppercase; letter-spacing: .05em; font-size: 1.25rem; color: var(--primary); }
+.sheet p { margin: 0; color: var(--muted); font-size: .92rem; overflow-wrap: anywhere; }
+.sheet .file { font-family: var(--font-display); font-weight: 600; color: var(--ink); letter-spacing: .02em; }
+.sheet .actions { display: grid; gap: 10px; margin-top: 6px; }
+.sheet .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wa { background: #1F9E55; border-color: #1F9E55; color: #fff; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <img id="logoImg" src="logo-esi.webp" alt="ESI Condition Monitoring" style="object-fit:cover;aspect-ratio:1290/396;object-position:47% 49.8%">
+      <div class="t">
+        <h1>Visita Técnica Comercial</h1>
+        <p>Registro de campo · informe en PDF</p>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="saved" id="savedTxt">Borrador sin cambios</span>
+      <span class="ref" id="refTxt">VT-000000-0000</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Secciones">
+    <p class="toc-h">Secciones</p>
+    <ol id="toc">
+      <li><a href="#s1" data-s="s1"><span class="n">1</span><span>Datos de la visita</span><span class="p"></span></a></li>
+      <li><a href="#s2" data-s="s2"><span class="n">2</span><span>Motivo</span><span class="p"></span></a></li>
+      <li><a href="#s3" data-s="s3"><span class="n">3</span><span>Equipo / necesidad</span><span class="p"></span></a></li>
+      <li><a href="#s4" data-s="s4"><span class="n">4</span><span>Hallazgo y evidencia</span><span class="p"></span></a></li>
+      <li><a href="#s5" data-s="s5"><span class="n">5</span><span>Oportunidad</span><span class="p"></span></a></li>
+      <li><a href="#s6" data-s="s6"><span class="n">6</span><span>Siguiente acción</span><span class="p"></span></a></li>
+    </ol>
+  </nav>
+
+  <form id="f" novalidate autocomplete="off">
+
+    <!-- 1 -->
+    <section class="card" id="s1">
+      <h2><span class="n">1</span>Datos de la visita</h2>
+      <div class="grid two">
+        <div class="field full" data-req>
+          <label class="lbl" for="cliente">Cliente <span class="req">*</span></label>
+          <input type="text" id="cliente" name="cliente" placeholder="Razón social o nombre de la empresa" autocapitalize="words">
+          <span class="msg">Escribe el nombre del cliente.</span>
+        </div>
+        <div class="field" data-req>
+          <label class="lbl" for="fecha">Fecha <span class="req">*</span></label>
+          <input type="date" id="fecha" name="fecha">
+          <span class="msg">Indica la fecha de la visita.</span>
+        </div>
+        <div class="field">
+          <label class="lbl" for="area">Área / Planta</label>
+          <input type="text" id="area" name="area" placeholder="Ej. Planta de molienda, Línea 2">
+        </div>
+        <div class="field full" data-req>
+          <span class="lbl" id="asesor-l">Asesor comercial <span class="req">*</span></span>
+          <div class="chips" role="radiogroup" aria-labelledby="asesor-l">
+            <label class="chip"><input type="radio" name="asesor" id="as1" value="Elvia Gonzales"><span>Elvia Gonzales</span></label>
+            <label class="chip"><input type="radio" name="asesor" id="as2" value="Gabriela Parra"><span>Gabriela Parra</span></label>
+            <label class="chip"><input type="radio" name="asesor" id="as3" value="Tiffani Bottini"><span>Tiffani Bottini</span></label>
+            <label class="chip"><input type="radio" name="asesor" id="as4" value="Asistente Comercial"><span>Asistente Comercial</span></label>
+          </div>
+          <span class="msg">Selecciona quién realizó la visita.</span>
+        </div>
+        <div class="field">
+          <label class="lbl" for="responsable">Responsable técnico</label>
+          <input type="text" id="responsable" name="responsable" placeholder="Técnico que acompañó la visita" autocapitalize="words">
+        </div>
+        <div class="field">
+          <label class="lbl" for="contacto">Contacto cliente</label>
+          <input type="text" id="contacto" name="contacto" placeholder="Nombre, cargo y teléfono">
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="card" id="s2">
+      <h2><span class="n">2</span>Motivo de la visita</h2>
+      <div class="grid">
+        <div class="field">
+          <label class="lbl" for="motivo">Motivo</label>
+          <select id="motivo" name="motivo">
+            <option value="">Selecciona un motivo…</option>
+            <option>Diagnóstico de falla reportada</option>
+            <option>Inspección técnica / levantamiento de información</option>
+            <option>Evaluación para mantenimiento predictivo</option>
+            <option>Seguimiento a servicio realizado</option>
+            <option>Seguimiento a cotización enviada</option>
+            <option>Presentación de servicios</option>
+            <option>Prospección de nuevo cliente</option>
+            <option>Reclamo o garantía</option>
+            <option>Coordinación de parada de planta</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="field" id="motivoOtroW" hidden>
+          <label class="lbl" for="motivoOtro">Especifica el motivo</label>
+          <input type="text" id="motivoOtro" name="motivoOtro">
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="card" id="s3">
+      <h2><span class="n">3</span>Equipo / necesidad identificada</h2>
+      <div class="grid two">
+        <div class="field full">
+          <span class="lbl" id="evaluo-l">¿Se evaluó algún equipo?</span>
+          <div class="chips" role="radiogroup" aria-labelledby="evaluo-l">
+            <label class="chip"><input type="radio" name="evaluo" id="ev1" value="Sí"><span>Sí</span></label>
+            <label class="chip"><input type="radio" name="evaluo" id="ev2" value="No"><span>No</span></label>
+          </div>
+        </div>
+        <div class="field full" id="equipoW">
+          <label class="lbl" for="equipo">Equipo</label>
+          <input type="text" id="equipo" name="equipo" placeholder="Ej. Ventilador de tiro inducido VT-02, motor 150 HP">
+        </div>
+        <div class="field full">
+          <span class="lbl" id="nec-l">Necesidad identificada</span>
+          <div class="chips" role="radiogroup" aria-labelledby="nec-l">
+            <label class="chip"><input type="radio" name="necesidad" id="ne1" value="Reparación"><span>Reparación</span></label>
+            <label class="chip"><input type="radio" name="necesidad" id="ne2" value="Mantenimiento"><span>Mantenimiento</span></label>
+            <label class="chip"><input type="radio" name="necesidad" id="ne3" value="Inspección"><span>Inspección</span></label>
+            <label class="chip"><input type="radio" name="necesidad" id="ne4" value="Otro"><span>Otro</span></label>
+          </div>
+        </div>
+        <div class="field full" id="necesidadOtroW" hidden>
+          <label class="lbl" for="necesidadOtro">Especifica la necesidad</label>
+          <input type="text" id="necesidadOtro" name="necesidadOtro">
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="card" id="s4">
+      <h2><span class="n">4</span>Hallazgo y evidencia</h2>
+      <div class="grid">
+        <div class="field">
+          <label class="lbl" for="hallazgo">Descripción breve</label>
+          <textarea id="hallazgo" name="hallazgo" placeholder="Qué se observó, síntomas, condición del equipo…"></textarea>
+        </div>
+        <div class="field">
+          <span class="lbl">Evidencia fotográfica</span>
+          <div class="photo-btns">
+            <button type="button" class="btn dashed" id="camBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+              Tomar foto
+            </button>
+            <button type="button" class="btn dashed" id="galBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg>
+              <span id="galTxt">Elegir de galería</span>
+            </button>
+          </div>
+          <input type="file" id="camIn" accept="image/*" capture="environment" hidden>
+          <input type="file" id="galIn" accept="image/*" multiple hidden>
+          <p class="processing" id="procTxt" hidden>Procesando imágenes…</p>
+          <div class="thumbs" id="thumbs"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="card" id="s5">
+      <h2><span class="n">5</span>Oportunidad comercial</h2>
+      <div class="grid two">
+        <div class="field">
+          <span class="lbl" id="op-l">¿Existe oportunidad?</span>
+          <div class="chips" role="radiogroup" aria-labelledby="op-l">
+            <label class="chip"><input type="radio" name="oportunidad" id="op1" value="Sí"><span>Sí</span></label>
+            <label class="chip"><input type="radio" name="oportunidad" id="op2" value="No"><span>No</span></label>
+            <label class="chip"><input type="radio" name="oportunidad" id="op3" value="Por confirmar"><span>Por confirmar</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="lbl" id="cot-l">Preparar cotización</span>
+          <div class="chips" role="radiogroup" aria-labelledby="cot-l">
+            <label class="chip"><input type="radio" name="cotizacion" id="co1" value="Sí"><span>Sí</span></label>
+            <label class="chip"><input type="radio" name="cotizacion" id="co2" value="No"><span>No</span></label>
+            <label class="chip"><input type="radio" name="cotizacion" id="co3" value="Por confirmar"><span>Por confirmar</span></label>
+          </div>
+        </div>
+        <div class="field full">
+          <span class="lbl" id="sv-l">Servicio potencial <span style="text-transform:none;letter-spacing:0;font-weight:400">(puedes marcar varios)</span></span>
+          <div class="chips" aria-labelledby="sv-l">
+            <label class="chip"><input type="checkbox" name="servicios" id="sv1" value="Balanceo dinámico"><span>Balanceo dinámico</span></label>
+            <label class="chip"><input type="checkbox" name="servicios" id="sv2" value="Análisis vibracional"><span>Análisis vibracional</span></label>
+            <label class="chip"><input type="checkbox" name="servicios" id="sv3" value="Análisis termográfico"><span>Análisis termográfico</span></label>
+            <label class="chip"><input type="checkbox" name="servicios" id="sv4" value="Alineamiento láser"><span>Alineamiento láser</span></label>
+            <label class="chip"><input type="checkbox" name="servicios" id="sv5" value="END (ensayos no destructivos)"><span>END</span></label>
+            <label class="chip"><input type="checkbox" name="servicios" id="sv6" value="Mantenimiento"><span>Mantenimiento</span></label>
+          </div>
+        </div>
+        <div class="field full">
+          <label class="lbl" for="servicioOtro">Otro servicio</label>
+          <input type="text" id="servicioOtro" name="servicioOtro" placeholder="Escribe si el servicio no está en la lista">
+        </div>
+        <div class="field full">
+          <span class="lbl" id="pr-l">Prioridad</span>
+          <div class="chips" role="radiogroup" aria-labelledby="pr-l">
+            <label class="chip p-hi"><input type="radio" name="prioridad" id="pr1" value="Inmediata"><span><i class="dot"></i>Inmediata</span></label>
+            <label class="chip p-md"><input type="radio" name="prioridad" id="pr2" value="Corto plazo"><span><i class="dot"></i>Corto plazo</span></label>
+            <label class="chip p-lo"><input type="radio" name="prioridad" id="pr3" value="Programable"><span><i class="dot"></i>Programable</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="card" id="s6">
+      <h2><span class="n">6</span>Siguiente acción</h2>
+      <div class="grid">
+        <div class="field">
+          <span class="lbl" id="ac-l">Acción</span>
+          <div class="chips" role="radiogroup" aria-labelledby="ac-l">
+            <label class="chip"><input type="radio" name="accion" id="ac1" value="Cotizar"><span>Cotizar</span></label>
+            <label class="chip"><input type="radio" name="accion" id="ac2" value="Solicitar información al cliente"><span>Solicitar información al cliente</span></label>
+            <label class="chip"><input type="radio" name="accion" id="ac3" value="Nueva visita"><span>Nueva visita</span></label>
+            <label class="chip"><input type="radio" name="accion" id="ac4" value="Sin acción"><span>Sin acción</span></label>
+            <label class="chip"><input type="radio" name="accion" id="ac5" value="Otro"><span>Otro</span></label>
+          </div>
+        </div>
+        <div class="field" id="accionOtroW" hidden>
+          <label class="lbl" for="accionOtro">Especifica la acción</label>
+          <input type="text" id="accionOtro" name="accionOtro">
+        </div>
+        <div class="field">
+          <span class="lbl" id="rs-l">Responsable</span>
+          <div class="chips" role="radiogroup" aria-labelledby="rs-l">
+            <label class="chip"><input type="radio" name="accionResp" id="rs1" value="Asesora"><span>Asesora</span></label>
+            <label class="chip"><input type="radio" name="accionResp" id="rs2" value="Técnico"><span>Técnico</span></label>
+            <label class="chip"><input type="radio" name="accionResp" id="rs3" value="Cliente"><span>Cliente</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </form>
+</div>
+
+<div class="bar">
+  <div class="bar-in">
+    <button type="button" class="btn ghost" id="newBtn">Nuevo</button>
+    <span class="grow status" id="progTxt"></span>
+    <button type="button" class="btn primary" id="pdfBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      Generar PDF
+    </button>
+  </div>
+</div>
+
+<!-- Modal PDF listo -->
+<div class="modal" id="pdfModal" hidden role="dialog" aria-modal="true" aria-labelledby="pdfTitle">
+  <div class="sheet">
+    <h3 id="pdfTitle">PDF listo</h3>
+    <p>Archivo: <span class="file" id="pdfName"></span> <span id="pdfSize"></span></p>
+    <div class="actions">
+      <button type="button" class="btn wa" id="shareBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+        Compartir (WhatsApp, correo…)
+      </button>
+      <div class="row">
+        <button type="button" class="btn" id="dlBtn">Descargar</button>
+        <button type="button" class="btn" id="viewBtn">Ver PDF</button>
+      </div>
+      <p id="shareNote" hidden>Este navegador no permite compartir archivos directamente. Descarga el PDF y adjúntalo en WhatsApp.</p>
+      <button type="button" class="btn ghost" id="closeBtn">Volver al formulario</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal confirmar nuevo -->
+<div class="modal" id="newModal" hidden role="dialog" aria-modal="true" aria-labelledby="newTitle">
+  <div class="sheet">
+    <h3 id="newTitle">¿Empezar una visita nueva?</h3>
+    <p>Se borrarán los datos y fotos de este formulario. Si aún no generaste el PDF, hazlo antes.</p>
+    <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">
+      <button type="button" class="btn" id="newCancel">Cancelar</button>
+      <button type="button" class="btn accent" id="newOk">Sí, empezar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const form = $('#f');
+  const DRAFT_KEY = 'vtc-borrador-v1';
+  const ASESOR_KEY = 'vtc-asesor';
+  let photos = [];   // {data, w, h, caption}
+  let ref = '';
+  let pdf = null;    // {blob, name, url}
+  let logo = null;   // {data, w, h} recortado, para cabecera y PDF
+
+  // Logo: el archivo original es cuadrado con mucho margen transparente; se recorta una vez al cargar
+  (function loadLogo() {
+    const img = new Image();
+    img.onload = () => {
+      const k = img.naturalWidth / 1500;            // recorte medido sobre el original de 1500 px
+      const sx = 80 * k, sy = 546 * k, sw = 1290 * k, sh = 396 * k;
+      const c = document.createElement('canvas');
+      c.width = 900; c.height = Math.round(900 * sh / sw);
+      c.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, c.width, c.height);
+      logo = { data: c.toDataURL('image/png'), w: c.width, h: c.height };
+      const el = $('#logoImg');
+      el.removeAttribute('style');
+      el.src = logo.data;
+    };
+    img.src = 'logo-esi.webp';
+  })();
+
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } },
+    del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+  };
+
+  const pad = n => String(n).padStart(2, '0');
+  const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
+  const newRef = () => { const d = new Date(); return `VT-${String(d.getFullYear()).slice(2)}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}`; };
+  const fechaLarga = iso => {
+    if (!iso) return '';
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('es', { day: '2-digit', month: 'long', year: 'numeric' });
+  };
+
+  // ---------- lectura / escritura del formulario ----------
+  function getData() {
+    const fd = new FormData(form);
+    const g = k => (fd.get(k) || '').toString().trim();
+    return {
+      ref,
+      cliente: g('cliente'), fecha: g('fecha'), asesor: g('asesor'), responsable: g('responsable'),
+      contacto: g('contacto'), area: g('area'),
+      motivo: g('motivo'), motivoOtro: g('motivoOtro'),
+      evaluo: g('evaluo'), equipo: g('equipo'), necesidad: g('necesidad'), necesidadOtro: g('necesidadOtro'),
+      hallazgo: g('hallazgo'),
+      oportunidad: g('oportunidad'), servicios: fd.getAll('servicios'), servicioOtro: g('servicioOtro'),
+      cotizacion: g('cotizacion'), prioridad: g('prioridad'),
+      accion: g('accion'), accionOtro: g('accionOtro'), accionResp: g('accionResp')
+    };
+  }
+  function setField(name, v) {
+    const el = form.elements[name];
+    if (!el) return;
+    if (el instanceof RadioNodeList || (el.length && !el.tagName)) {
+      const vals = Array.isArray(v) ? v : [v];
+      Array.from(el).forEach(i => { i.checked = vals.includes(i.value); });
+    } else if (el.type === 'radio' || el.type === 'checkbox') {
+      el.checked = Array.isArray(v) ? v.includes(el.value) : el.value === v;
+    } else {
+      el.value = v ?? '';
+    }
+  }
+  function fill(obj) { Object.entries(obj).forEach(([k, v]) => { if (k !== 'ref') setField(k, v); }); }
+
+  // ---------- campos condicionales ----------
+  function syncConditional() {
+    const d = getData();
+    $('#motivoOtroW').hidden = d.motivo !== 'Otro';
+    $('#necesidadOtroW').hidden = d.necesidad !== 'Otro';
+    $('#accionOtroW').hidden = d.accion !== 'Otro';
+    $('#equipoW').hidden = d.evaluo === 'No';
+  }
+
+  // ---------- avance por sección ----------
+  const SECTIONS = {
+    s1: ['cliente', 'fecha', 'asesor', 'responsable', 'contacto', 'area'],
+    s2: ['motivo'],
+    s3: ['evaluo', 'equipo', 'necesidad'],
+    s4: ['hallazgo', 'fotos'],
+    s5: ['oportunidad', 'servicios', 'cotizacion', 'prioridad'],
+    s6: ['accion', 'accionResp']
+  };
+  function syncProgress() {
+    const d = getData();
+    let filled = 0, total = 0;
+    for (const [s, keys] of Object.entries(SECTIONS)) {
+      const ks = keys.filter(k => !(k === 'equipo' && d.evaluo === 'No'));
+      const n = ks.filter(k => {
+        if (k === 'fotos') return photos.length > 0;
+        if (k === 'servicios') return d.servicios.length > 0 || d.servicioOtro;
+        return !!d[k];
+      }).length;
+      filled += n; total += ks.length;
+      const a = document.querySelector(`#toc a[data-s="${s}"]`);
+      a.querySelector('.p').textContent = n === ks.length ? '✓' : `${n}/${ks.length}`;
+      a.classList.toggle('done', n === ks.length);
+    }
+    $('#progTxt').textContent = `${filled} de ${total} campos completos`;
+  }
+
+  // ---------- borrador local ----------
+  let saveT;
+  function scheduleSave() {
+    clearTimeout(saveT);
+    saveT = setTimeout(() => {
+      const d = getData();
+      const withPhotos = { ...d, fotos: photos };
+      const ok = store.set(DRAFT_KEY, JSON.stringify(withPhotos)) || store.set(DRAFT_KEY, JSON.stringify(d));
+      if (d.asesor) store.set(ASESOR_KEY, d.asesor);
+      const t = new Date();
+      $('#savedTxt').textContent = ok ? `Borrador guardado ${pad(t.getHours())}:${pad(t.getMinutes())}` : 'Borrador no guardado';
+    }, 400);
+  }
+  function onChange() { syncConditional(); syncProgress(); scheduleSave(); clearErrors(); }
+  form.addEventListener('input', onChange);
+  form.addEventListener('change', onChange);
+
+  // ---------- fotos ----------
+  const isTouch = matchMedia('(pointer: coarse)').matches;
+  if (!isTouch) { $('#camBtn').hidden = true; $('#galTxt').textContent = 'Cargar imágenes'; }
+  $('#camBtn').onclick = () => $('#camIn').click();
+  $('#galBtn').onclick = () => $('#galIn').click();
+  $('#camIn').onchange = e => addFiles(e.target.files, e.target);
+  $('#galIn').onchange = e => addFiles(e.target.files, e.target);
+
+  function loadImage(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const max = 1600;
+        const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.naturalWidth * s);
+        c.height = Math.round(img.naturalHeight * s);
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        resolve({ data: c.toDataURL('image/jpeg', 0.8), w: c.width, h: c.height, caption: '' });
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('img')); };
+      img.src = url;
+    });
+  }
+  async function addFiles(list, input) {
+    const files = Array.from(list || []).filter(f => f.type.startsWith('image/') || /\.(jpe?g|png|heic|webp)$/i.test(f.name));
+    if (!files.length) return;
+    $('#procTxt').hidden = false;
+    for (const f of files) {
+      try { photos.push(await loadImage(f)); } catch (e) { /* formato no soportado */ }
+    }
+    $('#procTxt').hidden = true;
+    input.value = '';
+    renderThumbs(); onChange();
+  }
+  function renderThumbs() {
+    const box = $('#thumbs');
+    box.innerHTML = '';
+    photos.forEach((p, i) => {
+      const el = document.createElement('div');
+      el.className = 'thumb';
+      el.innerHTML = `<div class="img"><img alt="Foto ${i + 1}"><span class="no">${i + 1}</span><button type="button" class="rm" aria-label="Quitar foto ${i + 1}">×</button></div>
+        <input type="text" id="cap${i}" placeholder="Descripción (opcional)" aria-label="Descripción de la foto ${i + 1}">`;
+      el.querySelector('img').src = p.data;
+      const cap = el.querySelector('input');
+      cap.value = p.caption;
+      cap.addEventListener('input', e => { e.stopPropagation(); p.caption = cap.value; scheduleSave(); });
+      el.querySelector('.rm').onclick = () => { photos.splice(i, 1); renderThumbs(); onChange(); };
+      box.appendChild(el);
+    });
+  }
+
+  // ---------- validación ----------
+  function clearErrors() { form.querySelectorAll('.field.err').forEach(f => f.classList.remove('err')); }
+  function validate() {
+    const d = getData();
+    const missing = [];
+    if (!d.cliente) missing.push('cliente');
+    if (!d.fecha) missing.push('fecha');
+    if (!d.asesor) missing.push('as1');
+    missing.forEach(id => $('#' + id).closest('.field').classList.add('err'));
+    if (missing.length) {
+      $('#' + missing[0]).closest('.field').scrollIntoView({ block: 'center' });
+      if (missing[0] !== 'as1') $('#' + missing[0]).focus({ preventScroll: true });
+      return false;
+    }
+    return true;
+  }
+
+  // ---------- PDF ----------
+  const conOtro = (v, otro) => v === 'Otro' ? (otro ? `Otro: ${otro}` : 'Otro') : v;
+  const slug = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w]+/g, '_').replace(/^_|_$/g, '').slice(0, 40);
+
+  function buildPDF(d) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+    const W = 210, H = 297, M = 15, CW = W - 2 * M;
+    const C = {
+      ink: [24, 28, 51], navy: [40, 56, 137], brand: [230, 20, 37], muted: [94, 99, 128],
+      line: [214, 217, 230], soft: [240, 241, 247], red: [200, 16, 46], orange: [184, 110, 0], green: [46, 122, 76]
+    };
+    let y = 0;
+
+    const miniHeader = () => {
+      doc.setFillColor(...C.navy); doc.rect(0, 0, W, 9, 'F');
+      doc.setFillColor(...C.brand); doc.rect(0, 9, W, 0.8, 'F');
+      doc.setTextColor(255); doc.setFont('helvetica', 'bold'); doc.setFontSize(8);
+      doc.text('ESI CONDITION MONITORING  ·  VISITA TÉCNICA COMERCIAL', M, 6);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${d.cliente}  ·  ${d.ref}`, W - M, 6, { align: 'right' });
+      y = 18;
+    };
+    const ensure = h => { if (y + h > H - 18) { doc.addPage(); miniHeader(); } };
+
+    // Cabecera principal: logo a la izquierda, datos del informe a la derecha
+    const logoH = 15;
+    let textLeft = M;
+    if (logo) {
+      const logoW = logoH * logo.w / logo.h;
+      doc.addImage(logo.data, 'PNG', M, 8, logoW, logoH, 'esi-logo', 'FAST');
+      textLeft = M + logoW + 8;
+    }
+    doc.setTextColor(...C.navy); doc.setFont('helvetica', 'bold'); doc.setFontSize(13);
+    doc.text('INFORME DE VISITA TÉCNICA COMERCIAL', W - M, 13, { align: 'right' });
+    doc.setTextColor(...C.ink); doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
+    const sub = doc.splitTextToSize(`${d.cliente}${d.area ? '  ·  ' + d.area : ''}`, W - M - textLeft);
+    doc.text(sub[0], W - M, 19, { align: 'right' });
+    doc.setTextColor(...C.muted); doc.setFontSize(8.5);
+    doc.text(`${d.ref}  ·  ${fechaLarga(d.fecha)}`, W - M, 24, { align: 'right' });
+    doc.setFillColor(...C.navy); doc.rect(0, 29, W, 2.2, 'F');
+    doc.setFillColor(...C.brand); doc.rect(0, 31.2, W, 0.9, 'F');
+    y = 42;
+
+    // Resumen: 3 recuadros
+    const boxes = [
+      ['OPORTUNIDAD', d.oportunidad || '-', C.ink],
+      ['PRIORIDAD', d.prioridad || '-', { 'Inmediata': C.red, 'Corto plazo': C.orange, 'Programable': C.green }[d.prioridad] || C.ink],
+      ['SIGUIENTE ACCIÓN', conOtro(d.accion, d.accionOtro) || '-', C.ink]
+    ];
+    const bw = (CW - 8) / 3;
+    doc.setFontSize(10.5);
+    const bLines = boxes.map(b => doc.splitTextToSize(b[1], bw - 8).slice(0, 2));
+    const bh = 13 + Math.max(...bLines.map(l => l.length)) * 4.6;
+    boxes.forEach((b, i) => {
+      const x = M + i * (bw + 4);
+      doc.setFillColor(...C.soft); doc.rect(x, y, bw, bh, 'F');
+      doc.setFillColor(...b[2]); doc.rect(x, y, 1.2, bh, 'F');
+      doc.setTextColor(...C.muted); doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5);
+      doc.text(b[0], x + 5, y + 6.5);
+      doc.setTextColor(...b[2]); doc.setFontSize(10.5);
+      doc.text(bLines[i], x + 5, y + 12.5);
+    });
+    y += bh + 9;
+
+    // Helpers de sección
+    const section = (n, title) => {
+      ensure(22);
+      doc.setFillColor(...C.brand); doc.rect(M, y - 4.2, 6, 6, 'F');
+      doc.setTextColor(255); doc.setFont('helvetica', 'bold'); doc.setFontSize(9);
+      doc.text(String(n), M + 3, y + 0.1, { align: 'center' });
+      doc.setTextColor(...C.navy); doc.setFontSize(11);
+      doc.text(title.toUpperCase(), M + 9, y);
+      y += 3;
+      doc.setDrawColor(...C.navy); doc.setLineWidth(0.4); doc.line(M, y, W - M, y);
+      y += 6;
+    };
+    const LW = 52;
+    const row = (label, value) => {
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+      const lines = doc.splitTextToSize(value || '-', CW - LW);
+      const h = lines.length * 4.6 + 3.2;
+      ensure(h);
+      doc.setTextColor(...C.muted); doc.setFontSize(8.5); doc.setFont('helvetica', 'bold');
+      doc.text(label, M, y);
+      doc.setTextColor(...(value ? C.ink : C.muted)); doc.setFontSize(10); doc.setFont('helvetica', 'normal');
+      doc.text(lines, M + LW, y);
+      y += h - 3.2 + 1.2;
+      doc.setDrawColor(...C.line); doc.setLineWidth(0.2); doc.line(M, y, W - M, y);
+      y += 5;
+    };
+    const gap = () => { y += 4; };
+
+    section(1, 'Datos de la visita');
+    row('Cliente', d.cliente);
+    row('Fecha', fechaLarga(d.fecha));
+    row('Asesor comercial', d.asesor);
+    row('Responsable técnico', d.responsable);
+    row('Contacto cliente', d.contacto);
+    row('Área / Planta', d.area);
+    gap();
+
+    section(2, 'Motivo de la visita');
+    row('Motivo', conOtro(d.motivo, d.motivoOtro));
+    gap();
+
+    section(3, 'Equipo / necesidad identificada');
+    row('¿Se evaluó algún equipo?', d.evaluo);
+    if (d.evaluo !== 'No') row('Equipo', d.equipo);
+    row('Necesidad identificada', conOtro(d.necesidad, d.necesidadOtro));
+    gap();
+
+    section(4, 'Hallazgo y evidencia');
+    row('Descripción breve', d.hallazgo);
+    if (photos.length) {
+      y += 1;
+      const colW = (CW - 6) / 2;
+      for (let i = 0; i < photos.length; i += 2) {
+        const pair = photos.slice(i, i + 2);
+        doc.setFontSize(8.5);
+        const dims = pair.map(p => {
+          let w = colW, h = colW * p.h / p.w;
+          if (h > 85) { h = 85; w = h * p.w / p.h; }
+          const cap = doc.splitTextToSize(`Foto ${photos.indexOf(p) + 1}${p.caption ? ': ' + p.caption : ''}`, colW);
+          return { w, h, cap };
+        });
+        const rowH = Math.max(...dims.map(x => x.h)) + Math.max(...dims.map(x => x.cap.length)) * 3.8 + 8;
+        ensure(rowH);
+        const imgH = Math.max(...dims.map(x => x.h));
+        pair.forEach((p, j) => {
+          const x0 = M + j * (colW + 6);
+          const { w, h, cap } = dims[j];
+          doc.setFillColor(...C.soft); doc.rect(x0, y, colW, imgH, 'F');
+          doc.addImage(p.data, 'JPEG', x0 + (colW - w) / 2, y + (imgH - h) / 2, w, h, undefined, 'FAST');
+          doc.setDrawColor(...C.line); doc.setLineWidth(0.2); doc.rect(x0, y, colW, imgH);
+          doc.setTextColor(...C.muted); doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
+          doc.text(cap, x0, y + imgH + 4.5);
+        });
+        y += rowH;
+      }
+    } else {
+      row('Evidencia fotográfica', 'Sin fotos adjuntas');
+    }
+    gap();
+
+    section(5, 'Oportunidad comercial');
+    row('¿Existe oportunidad?', d.oportunidad);
+    const serv = [...d.servicios, ...(d.servicioOtro ? [d.servicioOtro] : [])];
+    row('Servicio potencial', serv.join(', '));
+    row('Preparar cotización', d.cotizacion);
+    row('Prioridad', d.prioridad);
+    gap();
+
+    section(6, 'Siguiente acción');
+    row('Acción', conOtro(d.accion, d.accionOtro));
+    row('Responsable', d.accionResp);
+
+    // Pie de página
+    const n = doc.getNumberOfPages();
+    const t = new Date();
+    const gen = `${pad(t.getDate())}/${pad(t.getMonth() + 1)}/${t.getFullYear()} ${pad(t.getHours())}:${pad(t.getMinutes())}`;
+    for (let i = 1; i <= n; i++) {
+      doc.setPage(i);
+      doc.setDrawColor(...C.line); doc.setLineWidth(0.2); doc.line(M, H - 12, W - M, H - 12);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(...C.muted);
+      doc.text(`ESI Condition Monitoring  ·  Elaborado por ${d.asesor}  ·  Generado ${gen}`, M, H - 7.5);
+      doc.text(`Página ${i} de ${n}`, W - M, H - 7.5, { align: 'right' });
+    }
+    return doc;
+  }
+
+  $('#pdfBtn').onclick = async () => {
+    if (!validate()) return;
+    if (!window.jspdf) { alert('No se pudo cargar el generador de PDF. Revisa tu conexión a internet y vuelve a intentar.'); return; }
+    const btn = $('#pdfBtn');
+    btn.disabled = true;
+    await new Promise(r => setTimeout(r, 30));
+    try {
+      const d = getData();
+      const doc = buildPDF(d);
+      const blob = doc.output('blob');
+      const name = `ESI_Visita_${slug(d.cliente) || 'cliente'}_${d.fecha}.pdf`;
+      if (pdf) URL.revokeObjectURL(pdf.url);
+      pdf = { blob, name, url: URL.createObjectURL(blob) };
+      $('#pdfName').textContent = name;
+      $('#pdfSize').textContent = blob.size < 1048576 ? `(${Math.max(1, Math.round(blob.size / 1024))} KB)` : `(${(blob.size / 1048576).toFixed(1)} MB)`;
+      const file = new File([blob], name, { type: 'application/pdf' });
+      const canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
+      $('#shareBtn').hidden = !canShare;
+      $('#shareNote').hidden = canShare;
+      $('#pdfModal').hidden = false;
+    } catch (e) {
+      console.error(e);
+      alert('No se pudo generar el PDF. Intenta de nuevo.');
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  $('#shareBtn').onclick = async () => {
+    const file = new File([pdf.blob], pdf.name, { type: 'application/pdf' });
+    try {
+      await navigator.share({ files: [file], title: pdf.name, text: `Informe de visita técnica – ${getData().cliente}` });
+    } catch (e) { /* cancelado por el usuario */ }
+  };
+  $('#dlBtn').onclick = () => {
+    const a = document.createElement('a');
+    a.href = pdf.url; a.download = pdf.name;
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+  $('#viewBtn').onclick = () => { window.open(pdf.url, '_blank'); };
+  $('#closeBtn').onclick = () => { $('#pdfModal').hidden = true; };
+
+  // ---------- nuevo formulario ----------
+  function resetForm() {
+    form.reset();
+    photos = [];
+    renderThumbs();
+    ref = newRef();
+    $('#refTxt').textContent = ref;
+    setField('fecha', todayISO());
+    const as = store.get(ASESOR_KEY);
+    if (as) setField('asesor', as);
+    store.del(DRAFT_KEY);
+    syncConditional(); syncProgress(); clearErrors();
+    $('#savedTxt').textContent = 'Formulario nuevo';
+    window.scrollTo(0, 0);
+  }
+  $('#newBtn').onclick = () => { $('#newModal').hidden = false; };
+  $('#newCancel').onclick = () => { $('#newModal').hidden = true; };
+  $('#newOk').onclick = () => { $('#newModal').hidden = true; resetForm(); };
+  document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.hidden = true; }));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal').forEach(m => m.hidden = true); });
+
+  // ---------- inicio ----------
+  const raw = store.get(DRAFT_KEY);
+  let draft = null;
+  try { draft = raw ? JSON.parse(raw) : null; } catch (e) {}
+  if (draft) {
+    ref = draft.ref || newRef();
+    fill({ ...draft, fotos: undefined });
+    photos = Array.isArray(draft.fotos) ? draft.fotos : [];
+    renderThumbs();
+    $('#savedTxt').textContent = 'Borrador recuperado';
+  } else {
+    ref = newRef();
+    setField('fecha', todayISO());
+    const as = store.get(ASESOR_KEY);
+    if (as) setField('asesor', as);
+  }
+  $('#refTxt').textContent = ref;
+  syncConditional(); syncProgress();
+})();
+</script>
+</body>
+</html>
